@@ -156,10 +156,15 @@ class PostPagesTests(TestCase):
             follow=True,
         )
         self.assertRedirects(
-            response, reverse("posts:post_detail", kwargs={"post_id": self.post.id})
+            response, reverse(
+                "posts:post_detail",
+                kwargs={"post_id": self.post.id}
+            )
         )
         self.assertEqual(Comment.objects.count(), comments_count + 1)
-        self.assertTrue(Comment.objects.filter(text="Тестовый коммент").exists())
+        self.assertTrue(
+            Comment.objects.filter(text="Тестовый коммент").exists()
+        )
 
     def test_check_cache(self):
         """Проверка кеша."""
@@ -216,10 +221,15 @@ class TaskPagesTests(TestCase):
             b"\x0A\x00\x3B"
         )
         cls.uploaded = SimpleUploadedFile(
-            name="small.gif", content=cls.small_gif, content_type="image/gif"
+            name="small.gif",
+            content=cls.small_gif,
+            content_type="image/gif"
         )
         cls.post = Post.objects.create(
-            author=cls.user, text="Тестовый текст", group=cls.group, image=cls.uploaded
+            author=cls.user,
+            text="Тестовый текст",
+            group=cls.group,
+            image=cls.uploaded
         )
 
     @classmethod
@@ -261,5 +271,8 @@ class TaskPagesTests(TestCase):
     def test_image_in_page(self):
         """Проверяем что пост с картинкой создается в БД"""
         self.assertTrue(
-            Post.objects.filter(text="Тестовый текст", image="posts/small.gif").exists()
+            Post.objects.filter(
+                text="Тестовый текст",
+                image="posts/small.gif"
+            ).exists()
         )
