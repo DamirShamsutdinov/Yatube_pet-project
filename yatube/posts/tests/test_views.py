@@ -9,6 +9,7 @@ from django.urls import reverse
 
 from ..models import Post, Group, User, Comment, Follow
 
+TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 class PostPagesTests(TestCase):
     @classmethod
@@ -176,9 +177,11 @@ class PostPagesTests(TestCase):
         self.assertEqual(r_1, r_2)
 
     def test_follow_page(self):
+        """Проверка подписки/отписки и страницу избранных постов """
         # Проверяем, что страница подписок пуста
         response = self.authorized_client.get(reverse("posts:follow_index"))
         self.assertEqual(len(response.context["page_obj"]), 0)
+
         # Проверка подписки на автора поста
         Follow.objects.get_or_create(user=self.user, author=self.post.author)
         r_2 = self.authorized_client.get(reverse("posts:follow_index"))
@@ -197,10 +200,8 @@ class PostPagesTests(TestCase):
         r_3 = self.authorized_client.get(reverse("posts:follow_index"))
         self.assertEqual(len(r_3.context["page_obj"]), 0)
 
-
-TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
-
-
+# Решил вывести тесты картинок в отдельный класс
+# Знаю что нарушаю правило DRY но считаю что так читабельнее, для меня
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class TaskPagesTests(TestCase):
     @classmethod
