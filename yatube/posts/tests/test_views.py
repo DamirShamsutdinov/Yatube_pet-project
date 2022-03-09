@@ -11,6 +11,7 @@ from ..models import Post, Group, User, Comment, Follow
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
+
 class PostPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -199,6 +200,7 @@ class PostPagesTests(TestCase):
         Follow.objects.all().delete()
         r_3 = self.authorized_client.get(reverse("posts:follow_index"))
         self.assertEqual(len(r_3.context["page_obj"]), 0)
+
 
 # Решил вывести тесты картинок в отдельный класс
 # Знаю что нарушаю правило DRY но считаю что так читабельнее, для меня
