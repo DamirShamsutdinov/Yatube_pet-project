@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Технологии{% endblock %}
+{% block content %}
+{% comment %} Колонки с отступом сверху и снизу {% endcomment %}
+<div class="card-body">
+  <h1>Вот что я умею</h1>
+    {% comment %}
+    Боковой блок со списком технологий
+    Займет всю ширину блока на мобильном
+    и 25% при размерах экрана ≥768px
+  {% endcomment %}
+  <aside class="col-12 col-md-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Python
+      </li>
+      <li class="list-group-item">
+        Django
+      </li>
+    </ul>
+  </aside>
+  {% comment %}
+    Статья
+    Займет всю ширину блока на мобильном
+    и 75% при размерах экрана ≥768px
+  {% endcomment %}
+  <article class="col-12 col-md-9">
+    <p>Что касается чистого Python мы научились:</p>
+    <ul>
+      <li>Использовать операторы DML, DDL в языке структурирования данных SQL</li>
+      <li>Использовать основной синтаксис Python</li>
+      <li>Умение использоваться инструментами ООП</li>
+    </ul>
+    <p>По фреймворку Django:</p>
+      <ul>
+        <li>На данном этапе обучения мы прошли основы фреймворка Django.</li>
+        <li>Узнали как создавать проект и приложения.</li>
+        <li>Узнали как подключать к нему шаблоны страниц и их формы.</li>
+        <li>Подключили авторизацию пользователя и пр. полезные страницы.</li>
+        <li>Подключили навигацию.</li>
+      </ul>
+  </article>
+</div>
+{% endblock %}

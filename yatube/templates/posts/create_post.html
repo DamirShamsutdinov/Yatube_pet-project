@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %}
+  {% if is_edit %}
+    Редактировать запись
+  {% else %}
+    Добавить запись
+  {% endif %}
+{% endblock %}
+{% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 p-5">
+        <div class="card">
+          <div class="card-header">
+            {% if is_edit %}
+              Редактировать пост
+            {% else %}
+              Новый пост
+            {% endif %}
+          </div>
+          <div class="card-body">
+            <form method="post" action="" enctype="multipart/form-data">
+              <input type="hidden" name="csrfmiddlewaretoken"
+                     value="{{ csrf_token }}">
+              <div class="form-group row my-3 p-3">
+                <label for="id_text">
+                  Текст поста
+                  <span class="required text-danger">*</span>
+                </label>
+                {{ form.text }}
+                <small id="id_text-help" class="form-text text-muted">
+                  Текст нового поста
+                </small>
+              </div>
+              <div class="form-group row my-3 p-3">
+                <label for="id_group">
+                  Группа
+                </label>
+                {{ form.group }}
+                <small id="id_group-help" class="form-text text-muted">
+                  Группа, к которой будет относиться пост
+                </small>
+              </div>
+              <div class="form-group row my-3 p-3">
+                <label for="id_image">
+                  Картинка
+                </label>
+                <input type="file" name="image" accept="image/*"
+                       class="form-control" id="id_image">
+              </div>
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                  {% if is_edit %}
+                    Сохранить
+                  {% else %}
+                    Добавить
+                  {% endif %}
+                </button>
+                {% if post.group %}
+                  <a href="{% url 'posts:profile' post.group.slug %}"></a>
+                {% endif %}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
