@@ -3,6 +3,7 @@ import tempfile
 
 from django import forms
 from django.conf import settings
+from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
@@ -49,6 +50,7 @@ class PostPagesTests(TestCase):
         )
 
     def setUp(self):
+        cache.clear()
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(PostPagesTests.user)
@@ -184,26 +186,33 @@ class PostPagesTests(TestCase):
         self.assertEqual(len(response.context["page_obj"]), 0)
 
         # Проверка подписки на автора поста
-        Follow.objects.get_or_create(user=self.user, author=self.post.author)
-        r_2 = self.authorized_client.get(reverse("posts:follow_index"))
-        self.assertEqual(len(r_2.context["page_obj"]), 1)
-        # проверка подписки у юзера-фоловера
-        self.assertIn(self.post, r_2.context["page_obj"])
+        new_author = User.objects.create(username="ЛНТ")
+        self.authorized_client.post(
+            reverse("posts:profile_follow", kwargs={"username": new_author})
+        )
+        self.assertIs(
+            Follow.objects.filter(user=self.user, author=new_author).exists(),
+            True
+        )
 
         # Проверка что пост не появился в избранных у юзера-обычного
         outsider = User.objects.create(username="NoName")
         self.authorized_client.force_login(outsider)
-        r_2 = self.authorized_client.get(reverse("posts:follow_index"))
-        self.assertNotIn(self.post, r_2.context["page_obj"])
-
+        self.assertIs(
+            Follow.objects.filter(user=outsider, author=new_author).exists(),
+            False
+        )
         # Проверка отписки от автора поста
-        Follow.objects.all().delete()
-        r_3 = self.authorized_client.get(reverse("posts:follow_index"))
-        self.assertEqual(len(r_3.context["page_obj"]), 0)
+        self.authorized_client.force_login(self.user)
+        self.authorized_client.post(
+            reverse("posts:profile_unfollow", kwargs={"username": new_author})
+        )
+        self.assertIs(
+            Follow.objects.filter(user=self.user, author=new_author).exists(),
+            False
+        )
 
 
-# Решил вывести тесты картинок в отдельный класс
-# Знаю что нарушаю правило DRY но считаю что так читабельнее, для меня
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class TaskPagesTests(TestCase):
     @classmethod
@@ -241,6 +250,7 @@ class TaskPagesTests(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
+        cache.clear()
         self.guest_client = Client()
 
     def test_image_in_group_list_page(self):
