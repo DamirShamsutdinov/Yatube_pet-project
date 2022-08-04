@@ -13,13 +13,13 @@
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-https://github.com/alvaresShD/api_yamdb.git
+https://github.com/DamirShamsutdinov/Yatube_pet-project.git
 ```
 
 Перейти в папку с проектом
 
 ```
-cd api_yamdb
+cd yatube
 ```
 
 Cоздать и активировать виртуальное окружение:
