@@ -68,5 +68,4 @@ MAC: python3 manage.py runserver
 * ```posts/groups/{id}/``` - Получение описания сообщества с соответствующим **id** (_GET_);
 * ```posts/follow/``` - Получение информации о подписках текущего пользователя, создание новой подписки на пользователя (_GET, POST_).<br/>
 
-### Визуализация развернутого проекта:
-*http://alvaresshd.pythonanywhere.com/*
+[**Визуализация развернутого проекта**](http://alvaresshd.pythonanywhere.com/)
